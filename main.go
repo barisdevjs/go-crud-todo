@@ -24,14 +24,17 @@ var mg MongoInstance
 var USER_NAME string
 var DB_PASS string
 
-const dbName = "employee"
+const dbName = "Todo"
 
-type Employee struct {
-	ID     string  `json:"id,omitempty" bson:"_id,omitempty"` // bson just for mongoDb to tell it is id
-	Name   string  `json:"name"`
-	Salary float64 `json:"salary"`
-	Age    float64 `json:"age"`
+type Todo struct {
+	ID          string `json:"id,omitempty" bson:"_id,omitempty"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	IsCompleted bool   `json:"is_completed" bson:"iscompleted"`
 }
+
+// bson means that we see the at bson format at MongoDb but it
+// will come like a json format
 
 func Connect() error {
 	currentWorkDirectory, _ := os.Getwd()
@@ -81,13 +84,13 @@ func main() {
 	}
 	app := fiber.New()
 
-	app.Get("/employee", GetEmployees)
-	app.Get("/employee/:id", GetEmployee)
-	app.Post("/employee", CreateEmployee)
-	app.Delete("/employee/:id", DeleteEmployee)
-	app.Delete("/employee", DeleteEmployees)
-	app.Put("/employee/:id", UpdateEmployee)
+	app.Get("/getAllTodos", GetTodos)
+	app.Get("/getTodo/:id", GetTodo)
+	app.Post("/createTodo", CreateTodo)
+	app.Delete("/deleteTodo/:id", DeleteTodo)
+	app.Delete("/deleteTodos", DeleteTodos)
+	app.Put("/updateTodo/:id", UpdateTodo)
 
-	log.Fatal(app.Listen(":8082"))
+	log.Fatal(app.Listen(":8085"))
 
 }

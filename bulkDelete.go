@@ -12,7 +12,7 @@ type RequestBody struct {
 	IDs []string `json:"ids"`
 }
 
-func DeleteEmployees(c *fiber.Ctx) error {
+func DeleteTodos(c *fiber.Ctx) error {
 	var reqBody RequestBody
 	if err := c.BodyParser(&reqBody); err != nil {
 		return c.Status(400).JSON(fiber.Map{"error": "Failed to parse request body"})
@@ -34,7 +34,7 @@ func DeleteEmployees(c *fiber.Ctx) error {
 	}
 
 	// Get the MongoDB collection
-	collection := mg.Db.Collection("employees")
+	collection := mg.Db.Collection("Todo-1")
 
 	// Create the filter with $in operator to match multiple employee IDs
 	filter := bson.M{"_id": bson.M{"$in": objectIDs}}

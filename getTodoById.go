@@ -6,21 +6,21 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func DeleteTodo(c *fiber.Ctx) error {
+func GetTodo(c *fiber.Ctx) error {
 	todoID, err := primitive.ObjectIDFromHex(c.Params("id"))
 	if err != nil {
 		return c.SendStatus(400)
 	}
 
 	query := bson.D{{Key: "_id", Value: todoID}}
-	result, err := mg.Db.Collection("Todo-1").DeleteOne(c.Context(), &query)
+	result := mg.Db.Collection("Todo-1").FindOne(c.Context(), &query)
 
+	var todo Todo
+	err = result.Decode(&todo)
 	if err != nil {
 		return c.SendStatus(500)
 	}
 
-	if result.DeletedCount < 1 {
-		return c.SendStatus(404)
-	}
-	return c.Status(200).JSON("record deleted")
+	return c.Status(200).JSON(todo)
+
 }
