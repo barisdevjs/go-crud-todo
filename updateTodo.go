@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -28,6 +30,8 @@ func UpdateTodo(c *fiber.Ctx) error {
 				{Key: "title", Value: todo.Title},
 				{Key: "description", Value: todo.Description},
 				{Key: "iscompleted", Value: todo.IsCompleted},
+				{Key: "createdat", Value: todo.CreatedAt},
+				{Key: "updatedat", Value: time.Now()},
 			},
 		},
 	}

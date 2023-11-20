@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
@@ -17,6 +18,7 @@ func CreateTodo(c *fiber.Ctx) error {
 	}
 
 	todo.ID = ""
+	todo.CreatedAt = time.Now()
 
 	fmt.Printf("Received Todo: %+v\n", todo)
 

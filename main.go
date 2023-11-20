@@ -27,10 +27,12 @@ var DB_PASS string
 const dbName = "Todo"
 
 type Todo struct {
-	ID          string `json:"id,omitempty" bson:"_id,omitempty"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	IsCompleted bool   `json:"is_completed" bson:"iscompleted"`
+	ID          string    `json:"id,omitempty" bson:"_id,omitempty"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	IsCompleted bool      `json:"is_completed" bson:"iscompleted"`
+	CreatedAt   time.Time `json:"created_at" bson:"createdat"`
+	UpdatedAt   time.Time `json:"updated_at,omitempty" bson:"updatedat,omitempty"`
 }
 
 // bson means that we see the at bson format at MongoDb but it
