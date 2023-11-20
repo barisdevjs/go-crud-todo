@@ -7,6 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func UpdateTodo(c *fiber.Ctx) error {
@@ -36,13 +37,19 @@ func UpdateTodo(c *fiber.Ctx) error {
 		},
 	}
 
-	result := mg.Db.Collection("Todo-1").FindOneAndUpdate(c.Context(), query, update)
+	// Set the ReturnDocument option to mongo.After to get the updated document
+	options := options.FindOneAndUpdate().SetReturnDocument(options.After)
+	result := mg.Db.Collection("Todo-1").FindOneAndUpdate(c.Context(), query, update, options)
 
 	if result.Err() != nil {
 		if result.Err() == mongo.ErrNoDocuments {
 			return c.SendStatus(404)
 		}
 		return c.Status(500).SendString("Error updating Todo: " + result.Err().Error())
+	}
+
+	if err := result.Decode(todo); err != nil {
+		return c.Status(500).SendString("Error decoding updated Todo: " + err.Error())
 	}
 
 	todo.ID = idParam

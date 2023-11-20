@@ -19,6 +19,7 @@ func CreateTodo(c *fiber.Ctx) error {
 
 	todo.ID = ""
 	todo.CreatedAt = time.Now()
+	todo.UpdatedAt = nil
 
 	fmt.Printf("Received Todo: %+v\n", todo)
 

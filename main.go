@@ -27,12 +27,12 @@ var DB_PASS string
 const dbName = "Todo"
 
 type Todo struct {
-	ID          string    `json:"id,omitempty" bson:"_id,omitempty"`
-	Title       string    `json:"title"`
-	Description string    `json:"description"`
-	IsCompleted bool      `json:"is_completed" bson:"iscompleted"`
-	CreatedAt   time.Time `json:"created_at" bson:"createdat"`
-	UpdatedAt   time.Time `json:"updated_at,omitempty" bson:"updatedat,omitempty"`
+	ID          string     `json:"id,omitempty" bson:"_id,omitempty"`
+	Title       string     `json:"title"`
+	Description string     `json:"description"`
+	IsCompleted bool       `json:"is_completed"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   *time.Time `json:"updated_at"`
 }
 
 // bson means that we see the at bson format at MongoDb but it
@@ -53,8 +53,8 @@ func Connect() error {
 
 	escapedUser := url.QueryEscape(USER_NAME)
 	escapedPass := url.QueryEscape(DB_PASS)
-	mongoURI := "mongodb+srv://" + escapedUser + ":" + escapedPass + "@cluster0.smzb3os.mongodb.net/" + dbName + "?retryWrites=true&w=majority"
-
+	// mongoURI := "mongodb+srv://" + escapedUser + ":" + escapedPass + "@cluster0.smzb3os.mongodb.net/" + dbName + "?retryWrites=true&w=majority"
+	mongoURI := "mongodb+srv://" + escapedUser + ":" + escapedPass + "@cluster0.smzb3os.mongodb.net/?retryWrites=true&w=majority&directConnection=false"
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	client, err := mongo.NewClient(options.Client().ApplyURI(mongoURI).SetServerAPIOptions(serverAPI))
 	if err != nil {
