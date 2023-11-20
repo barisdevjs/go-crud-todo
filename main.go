@@ -35,8 +35,8 @@ type Todo struct {
 	UpdatedAt   *time.Time `json:"updated_at"`
 }
 
-// bson means that we see the at bson format at MongoDb but it
-// will come like a json format
+// bson means that we see the at bson format at MongoDb
+// but it will come like a json format
 
 func Connect() error {
 	currentWorkDirectory, _ := os.Getwd()
@@ -92,6 +92,7 @@ func main() {
 	app.Delete("/deleteTodo/:id", DeleteTodo)
 	app.Delete("/deleteTodos", DeleteTodos)
 	app.Put("/updateTodo/:id", UpdateTodo)
+	app.Options("/options", GetOptions)
 
 	log.Fatal(app.Listen(":8085"))
 
