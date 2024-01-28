@@ -92,7 +92,9 @@ func main() {
 	app.Delete("/deleteTodo/:id", DeleteTodo)
 	app.Delete("/deleteTodos", DeleteTodos)
 	app.Put("/updateTodo/:id", UpdateTodo)
+	app.Patch("/updatePartialTodo/:id", PatchTodo)
 	app.Options("/options", GetOptions)
+	
 
 	log.Fatal(app.Listen(":8085"))
 
