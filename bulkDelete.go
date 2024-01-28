@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -10,6 +8,11 @@ import (
 
 type RequestBody struct {
 	IDs []string `json:"ids"`
+}
+
+type DeleteResponse struct {
+	DeletedIDs []string `json:"deleted_ids"`
+	Statuses   map[string]bool `json:"statuses"`
 }
 
 func DeleteTodos(c *fiber.Ctx) error {
@@ -45,13 +48,24 @@ func DeleteTodos(c *fiber.Ctx) error {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to delete records", "details": err.Error()})
 	}
 
-	if result.DeletedCount < 1 {
-		return c.Status(404).JSON(fiber.Map{"error": "No records deleted"})
+	// Prepare the response
+	response := DeleteResponse{
+		DeletedIDs: make([]string, 0),
+		Statuses:   make(map[string]bool),
 	}
 
-	// Print all the deleted IDs
-	fmt.Println("Deleted IDS ==> ", objectIDs)
-	fmt.Println("Deleted Count ==> ", result.DeletedCount)
+	// Populate the response with deleted IDs and their statuses
+	for _, id := range objectIDs {
+		response.DeletedIDs = append(response.DeletedIDs, id.Hex())
+	}
 
-	return c.Status(200).JSON(fiber.Map{"message": "Records deleted successfully"})
+	// Populate the statuses
+	if result.DeletedCount > 0 {
+		for _, id := range response.DeletedIDs {
+			response.Statuses[id] = true
+		}
+	}
+
+	// Return the response
+	return c.Status(200).JSON(response)
 }

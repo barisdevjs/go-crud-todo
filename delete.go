@@ -29,5 +29,13 @@ func DeleteTodo(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusNotFound)
 	}
 
-	return c.Status(fiber.StatusOK).JSON("record deleted")
+	response := struct {
+		ID     string `json:"id"`
+		Status bool   `json:"status"`
+	}{
+		ID:     todoID.Hex(),
+		Status: true, // Indicating the deletion was successful
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response)
 }
